@@ -493,24 +493,23 @@ void pass2(void)
 					}
 					else
 					{
-						cptr = find_entry(q, label_count, lab_val_index);
+						cptr = NULL;
 
-						if (cptr == NULL)
-						{
+						if(~pgmflags[i] & PF_SYMBOL) {
+							cptr = find_entry(q, label_count, lab_val_index);
+						}
+
+						if(cptr == NULL && ~pgmflags[i] & PF_LABEL) {
 							cptr = find_entry(q, symbol_count, sym_val_index);
-
-							if (cptr == NULL)
-							{
-								if (!upperflag)
-									kcnt += fprintf(fp, "X%04x", q);
-								else
-									kcnt += fprintf(fp, "X%04X", q);
-							}
 						}
 					}
 
 					if (cptr != NULL)
 						kcnt += fprintf(fp, "%s", cptr);
+					else if (!upperflag)
+						kcnt += fprintf(fp, "X%04x", q);
+					else
+						kcnt += fprintf(fp, "X%04X", q);
 
 					splitcheck(i + 1);
 					splitcheck(i + 2);
